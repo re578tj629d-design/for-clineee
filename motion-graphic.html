@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>هنر محتواسازی | Motion Graphic</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300;400;700;900&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--c1:#ff6b6b;--c2:#ffd93d;--c3:#6bcb77;--c4:#4d96ff;--c5:#c77dff;--c6:#ff9a3c;--dark:#0a0a1a}
+body{background:var(--dark);font-family:'Vazirmatn',sans-serif;overflow-x:hidden;color:white}
+#stars{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,#0d0d2b 0%,#000005 100%)}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d) infinite ease-in-out}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+section{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;overflow:hidden}
+#hero{text-align:center}
+.hero-tag{display:inline-block;background:linear-gradient(135deg,var(--c4),var(--c5));padding:6px 22px;border-radius:50px;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;animation:fadeDown .8s ease both;margin-bottom:24px}
+.hero-title{font-size:clamp(2.4rem,7vw,6rem);font-weight:900;line-height:1.15;animation:fadeUp 1s ease .3s both}
+.word{display:inline-block;background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c4),var(--c5));background-size:300% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradShift 4s linear infinite}
+.hero-sub{font-size:clamp(1rem,2.5vw,1.4rem);color:#aaa;max-width:640px;margin:20px auto 0;animation:fadeUp 1s ease .6s both}
+.scroll-hint{margin-top:56px;animation:bounce 2s infinite;font-size:2rem}
+.floating-icons{position:absolute;inset:0;pointer-events:none}
+.fi{position:absolute;font-size:clamp(1.6rem,3vw,2.8rem);animation:floatIcon var(--fd) ease-in-out infinite;opacity:.75;filter:drop-shadow(0 0 10px currentColor)}
+@keyframes floatIcon{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-28px) rotate(12deg)}}
+.sec-title{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;text-align:center;margin-bottom:56px}
+.sec-title span{background:linear-gradient(90deg,var(--c4),var(--c5));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;width:100%;max-width:900px}
+.stat-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:36px 20px;text-align:center;backdrop-filter:blur(12px);transition:transform .3s,box-shadow .3s}
+.stat-card:hover{transform:translateY(-8px);box-shadow:0 20px 60px rgba(77,150,255,.25)}
+.stat-icon{font-size:2.8rem;display:block;margin-bottom:14px}
+.stat-num{font-size:3rem;font-weight:900;background:linear-gradient(135deg,var(--c2),var(--c6));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.9rem;color:#bbb;margin-top:6px}
+.marquee-wrap{overflow:hidden;width:100%;padding:30px 0;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);position:relative;z-index:1}
+.marquee-track{display:flex;gap:80px;animation:marquee 22s linear infinite;white-space:nowrap}
+.marquee-item{font-size:1.1rem;font-weight:700;color:rgba(255,255,255,.5);flex-shrink:0}
+.marquee-item span{color:var(--c2);margin-left:8px}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#typewriter-sec{background:radial-gradient(ellipse at 50% 50%,rgba(77,150,255,.08) 0%,transparent 70%);text-align:center}
+.tw-label{font-size:.85rem;letter-spacing:4px;color:var(--c4);text-transform:uppercase;margin-bottom:20px}
+.typewriter-wrap{font-size:clamp(1.8rem,5vw,4rem);font-weight:900;min-height:1.3em}
+#tw-cursor{display:inline-block;width:3px;height:1em;background:var(--c2);vertical-align:middle;animation:blink .7s step-end infinite;margin-right:4px}
+@keyframes blink{50%{opacity:0}}
+.steps{display:flex;flex-direction:column;gap:0;max-width:760px;width:100%}
+.step{display:flex;align-items:flex-start;gap:24px;padding:32px 0;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:28px;top:80px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--c4),transparent)}
+.step-num{flex-shrink:0;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,var(--c4),var(--c5));box-shadow:0 0 24px rgba(77,150,255,.5);animation:pulse 2s infinite}
+.step-body h3{font-size:1.25rem;margin-bottom:8px}
+.step-body p{color:#aaa;font-size:.95rem;line-height:1.8}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:20px;max-width:860px;width:100%}
+.skill-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:28px 16px;text-align:center;cursor:default;transition:all .35s;position:relative;overflow:hidden}
+.skill-card::before{content:'';position:absolute;inset:0;background:var(--bg);opacity:0;transition:opacity .35s;border-radius:20px}
+.skill-card:hover::before{opacity:.15}
+.skill-card:hover{transform:scale(1.07) translateY(-4px);border-color:rgba(255,255,255,.25)}
+.sk-icon{font-size:2.4rem;display:block;margin-bottom:12px}
+.sk-name{font-size:.85rem;font-weight:700;letter-spacing:1px}
+.bars{max-width:700px;width:100%;display:flex;flex-direction:column;gap:24px}
+.bar-row{display:flex;flex-direction:column;gap:8px}
+.bar-header{display:flex;justify-content:space-between;font-size:.95rem}
+.bar-track{height:12px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;background:var(--bg);width:0;transition:width 1.6s cubic-bezier(.25,.46,.45,.94)}
+#cta{text-align:center}
+.cta-title{font-size:clamp(2rem,5vw,4rem);font-weight:900;margin-bottom:20px}
+.cta-sub{color:#aaa;font-size:1.1rem;margin-bottom:40px}
+.btn-group{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:50px;font-size:1rem;font-weight:700;cursor:pointer;border:none;text-decoration:none;transition:transform .25s,box-shadow .25s;font-family:'Vazirmatn',sans-serif}
+.btn:hover{transform:translateY(-4px)}
+.btn-primary{background:linear-gradient(135deg,var(--c4),var(--c5));color:white;box-shadow:0 10px 40px rgba(77,150,255,.4)}
+.btn-primary:hover{box-shadow:0 16px 50px rgba(77,150,255,.6)}
+.btn-outline{background:transparent;border:2px solid rgba(255,255,255,.25);color:white}
+.btn-outline:hover{border-color:white;background:rgba(255,255,255,.07)}
+.particle-burst{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.pb{position:absolute;border-radius:50%;animation:burstMove var(--bd) ease-in-out infinite;opacity:.3}
+@keyframes burstMove{0%{transform:translate(var(--bx1),var(--by1)) scale(0);opacity:.5}100%{transform:translate(var(--bx2),var(--by2)) scale(1);opacity:0}}
+.neon{animation:neonGlow 2s ease-in-out infinite alternate}
+@keyframes neonGlow{from{text-shadow:0 0 10px var(--c4),0 0 20px var(--c4),0 0 40px var(--c4)}to{text-shadow:0 0 20px var(--c5),0 0 40px var(--c5),0 0 80px var(--c5)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 24px rgba(77,150,255,.5)}50%{box-shadow:0 0 40px rgba(77,150,255,.9)}}
+@keyframes gradShift{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(12px)}}
+@keyframes colorCycle{0%{color:var(--c1)}20%{color:var(--c2)}40%{color:var(--c3)}60%{color:var(--c4)}80%{color:var(--c5)}100%{color:var(--c1)}}
+.reveal{opacity:0;transform:translateY(50px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+footer{position:relative;z-index:1;text-align:center;padding:40px 20px;color:rgba(255,255,255,.3);font-size:.85rem;border-top:1px solid rgba(255,255,255,.06)}
+.heart{animation:colorCycle 3s linear infinite;font-size:1rem}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<section id="hero">
+  <div class="floating-icons" id="heroIcons"></div>
+  <div class="particle-burst" id="heroBurst"></div>
+  <div class="hero-tag">✦ دنیای محتوا ✦</div>
+  <h1 class="hero-title">
+    <span class="word">محتوا</span>&nbsp;<span style="color:white;">سلاح</span><br>
+    <span class="word">برندهای</span>&nbsp;<span style="color:white;">قدرتمند</span>
+  </h1>
+  <p class="hero-sub">محتوای خوب فقط کلمه نیست — یک تجربه است، یک احساس است، یک ارتباط ماندگار است.</p>
+  <div class="scroll-hint">⬇️</div>
+</section>
+
+<div class="marquee-wrap"><div class="marquee-track" id="marqueeTrack"></div></div>
+
+<section id="stats">
+  <h2 class="sec-title reveal">محتوا <span>در اعداد</span></h2>
+  <div class="stats-grid">
+    <div class="stat-card reveal"><span class="stat-icon">📝</span><div class="stat-num" data-target="600">۰</div><div class="stat-label">میلیون بلاگ فعال در جهان</div></div>
+    <div class="stat-card reveal"><span class="stat-icon">🎬</span><div class="stat-num" data-target="500">۰</div><div class="stat-label">ساعت ویدیو در یوتیوب / دقیقه</div></div>
+    <div class="stat-card reveal"><span class="stat-icon">📱</span><div class="stat-num" data-target="95">۰</div><div class="stat-label">% کاربران موبایل مصرف‌کننده محتوا</div></div>
+    <div class="stat-card reveal"><span class="stat-icon">🚀</span><div class="stat-num" data-target="6">۰</div><div class="stat-label">× بازده بیشتر از تبلیغات سنتی</div></div>
+  </div>
+</section>
+
+<section id="typewriter-sec">
+  <p class="tw-label">✦ محتوا یعنی ✦</p>
+  <div class="typewriter-wrap neon"><span id="tw-text"></span><span id="tw-cursor"></span></div>
+</section>
+
+<section id="process">
+  <h2 class="sec-title reveal">فرآیند <span>خلق محتوا</span></h2>
+  <div class="steps" id="stepsContainer"></div>
+</section>
+
+<section id="skills">
+  <h2 class="sec-title reveal">ابزارهای <span>محتواساز</span></h2>
+  <div class="skills-grid" id="skillsGrid"></div>
+</section>
+
+<section id="progress-sec">
+  <h2 class="sec-title reveal">مهارت‌های <span>کلیدی</span></h2>
+  <div class="bars" id="barsContainer"></div>
+</section>
+
+<section id="cta">
+  <div class="particle-burst" id="ctaBurst"></div>
+  <h2 class="cta-title reveal neon">آماده‌ای شروع کنی؟ 🚀</h2>
+  <p class="cta-sub reveal">هر برند بزرگی با یک داستان شروع کرد. داستان تو چیست؟</p>
+  <div class="btn-group reveal">
+    <button class="btn btn-primary" onclick="ctaClick(this)">✨ شروع محتواسازی</button>
+    <button class="btn btn-outline" onclick="ctaClick(this)">📖 بیشتر بدانید</button>
+  </div>
+</section>
+
+<footer>ساخته شده با <span class="heart">❤️</span> برای خلق‌کنندگان محتوا &nbsp;|&nbsp; Motion HTML © 2025</footer>
+
+<script>
+// STARS
+(function(){
+  const s=document.getElementById('stars');
+  for(let i=0;i<160;i++){
+    const el=document.createElement('div');
+    el.className='star';
+    const sz=Math.random()*3+.5;
+    el.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+    s.appendChild(el);
+  }
+})();
+
+// FLOATING ICONS
+const heroIconsData=[
+  {e:'🎯',c:'#ff6b6b'},{e:'📊',c:'#ffd93d'},{e:'🎨',c:'#6bcb77'},
+  {e:'💡',c:'#4d96ff'},{e:'✍️',c:'#c77dff'},{e:'🔥',c:'#ff9a3c'},
+  {e:'📢',c:'#ff6b6b'},{e:'🌟',c:'#ffd93d'},{e:'🎬',c:'#4d96ff'},
+  {e:'📈',c:'#6bcb77'},{e:'🤳',c:'#c77dff'},{e:'💎',c:'#ff9a3c'},
+];
+const hic=document.getElementById('heroIcons');
+heroIconsData.forEach(ic=>{
+  const el=document.createElement('div');
+  el.className='fi';
+  el.textContent=ic.e;
+  el.style.cssText=`top:${10+Math.random()*75}%;left:${5+Math.random()*88}%;color:${ic.c};--fd:${(3+Math.random()*4).toFixed(1)}s;animation-delay:${(Math.random()*3).toFixed(1)}s`;
+  hic.appendChild(el);
+});
+
+// PARTICLE BURST
+function makeBurst(id){
+  const c=document.getElementById(id);
+  const colors=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff','#ff9a3c'];
+  for(let i=0;i<25;i++){
+    const el=document.createElement('div');
+    el.className='pb';
+    const sz=Math.random()*12+4;
+    el.style.cssText=`width:${sz}px;height:${sz}px;background:${colors[i%6]};top:${Math.random()*100}%;left:${Math.random()*100}%;--bd:${(2+Math.random()*5).toFixed(1)}s;--bx1:${(Math.random()*40-20).toFixed(0)}px;--by1:${(Math.random()*40-20).toFixed(0)}px;--bx2:${(Math.random()*200-100).toFixed(0)}px;--by2:${(Math.random()*200-100).toFixed(0)}px;animation-delay:${(Math.random()*4).toFixed(1)}s`;
+    c.appendChild(el);
+  }
+}
+makeBurst('heroBurst'); makeBurst('ctaBurst');
+
+// MARQUEE
+const marqueeItems=[
+  {t:'استراتژی محتوا',e:'🎯'},{t:'سئو و بازاریابی',e:'📈'},{t:'طراحی گرافیک',e:'🎨'},
+  {t:'تولید ویدیو',e:'🎬'},{t:'شبکه‌های اجتماعی',e:'📱'},{t:'کپی‌رایتینگ',e:'✍️'},
+  {t:'برندینگ',e:'💎'},{t:'پادکست',e:'🎙️'},{t:'ایمیل مارکتینگ',e:'📧'},{t:'اینفوگرافیک',e:'📊'},
+];
+const track=document.getElementById('marqueeTrack');
+[...marqueeItems,...marqueeItems].forEach(it=>{
+  const el=document.createElement('span');
+  el.className='marquee-item';
+  el.innerHTML=`<span>${it.e}</span>${it.t}`;
+  track.appendChild(el);
+});
+
+// TYPEWRITER
+const phrases=['🎯 هدف‌گذاری دقیق','📖 روایت جذاب','🔥 احساس واقعی','💡 ایده‌های خلاقانه','🚀 رشد پایدار','❤️ ارتباط انسانی','🌟 ارزش واقعی','📢 پیام ماندگار'];
+let pi=0,ci=0,deleting=false;
+const twEl=document.getElementById('tw-text');
+function type(){
+  const cur=phrases[pi];
+  if(!deleting){
+    twEl.textContent=cur.slice(0,++ci);
+    if(ci===cur.length){deleting=true;setTimeout(type,1800);return;}
+  } else {
+    twEl.textContent=cur.slice(0,--ci);
+    if(ci===0){deleting=false;pi=(pi+1)%phrases.length;setTimeout(type,400);return;}
+  }
+  setTimeout(type,deleting?55:90);
+}
+type();
+
+// STEPS
+const steps=[
+  {n:'۰۱',icon:'🔍',title:'تحقیق و کشف',desc:'شناخت مخاطب، رقبا، و بازار هدف. هر محتوای عالی با یک سوال عمیق شروع می‌شود.'},
+  {n:'۰۲',icon:'💡',title:'ایده‌پردازی خلاقانه',desc:'طوفان فکری، ذهن‌نقشه، و یافتن زاویه‌ای که دیگران نگفته‌اند.'},
+  {n:'۰۳',icon:'✍️',title:'تولید و خلق',desc:'نوشتن، ضبط، طراحی — تبدیل ایده به یک اثر واقعی و ملموس.'},
+  {n:'۰۴',icon:'✅',title:'ویرایش و بهینه‌سازی',desc:'هر کلمه اهمیت دارد. محتوا را صیقل بده تا بدرخشد.'},
+  {n:'۰۵',icon:'🚀',title:'انتشار و توزیع',desc:'چنل مناسب، زمان درست، و پیام قوی — سه رکن انتشار موفق.'},
+  {n:'۰۶',icon:'📊',title:'تحلیل و بهبود',desc:'داده‌ها دروغ نمی‌گویند. اندازه بگیر، یاد بگیر، و بهتر شو.'},
+];
+const sc=document.getElementById('stepsContainer');
+steps.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.className='step reveal';
+  d.innerHTML=`<div class="step-num">${s.n}</div><div class="step-body"><h3>${s.icon} ${s.title}</h3><p>${s.desc}</p></div>`;
+  sc.appendChild(d);
+});
+
+// SKILLS
+const skills=[
+  {icon:'📝',name:'وبلاگ‌نویسی',bg:'rgba(255,107,107,.15)'},{icon:'🎬',name:'ویدیو مارکتینگ',bg:'rgba(255,217,61,.15)'},
+  {icon:'📱',name:'شبکه اجتماعی',bg:'rgba(107,203,119,.15)'},{icon:'🎙️',name:'پادکست',bg:'rgba(77,150,255,.15)'},
+  {icon:'📊',name:'اینفوگرافیک',bg:'rgba(199,125,255,.15)'},{icon:'📧',name:'ایمیل مارکتینگ',bg:'rgba(255,154,60,.15)'},
+  {icon:'🔍',name:'سئو محتوا',bg:'rgba(255,107,107,.15)'},{icon:'🎨',name:'طراحی محتوا',bg:'rgba(107,203,119,.15)'},
+  {icon:'💎',name:'برندینگ',bg:'rgba(77,150,255,.15)'},{icon:'🤖',name:'هوش مصنوعی',bg:'rgba(199,125,255,.15)'},
+  {icon:'📸',name:'عکاسی',bg:'rgba(255,217,61,.15)'},{icon:'🌐',name:'لندینگ پیج',bg:'rgba(255,154,60,.15)'},
+];
+const sg=document.getElementById('skillsGrid');
+skills.forEach(sk=>{
+  const d=document.createElement('div');
+  d.className='skill-card reveal';
+  d.style.cssText=`--bg:${sk.bg}`;
+  d.innerHTML=`<span class="sk-icon">${sk.icon}</span><div class="sk-name">${sk.name}</div>`;
+  sg.appendChild(d);
+});
+
+// BARS
+const barData=[
+  {label:'کپی‌رایتینگ ✍️',pct:92,bg:'linear-gradient(90deg,#ff6b6b,#ff9a3c)'},
+  {label:'سئو محتوا 🔍',pct:85,bg:'linear-gradient(90deg,#4d96ff,#6bcb77)'},
+  {label:'استراتژی محتوا 🎯',pct:90,bg:'linear-gradient(90deg,#c77dff,#4d96ff)'},
+  {label:'تولید ویدیو 🎬',pct:78,bg:'linear-gradient(90deg,#ffd93d,#ff6b6b)'},
+  {label:'شبکه‌های اجتماعی 📱',pct:95,bg:'linear-gradient(90deg,#6bcb77,#4d96ff)'},
+];
+const bc=document.getElementById('barsContainer');
+barData.forEach(b=>{
+  const row=document.createElement('div');
+  row.className='bar-row reveal';
+  row.innerHTML=`<div class="bar-header"><span>${b.label}</span><span>${b.pct}%</span></div><div class="bar-track"><div class="bar-fill" style="background:${b.bg}" data-pct="${b.pct}"></div></div>`;
+  bc.appendChild(row);
+});
+
+// INTERSECTION OBSERVER
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      const fill=e.target.querySelector('.bar-fill');
+      if(fill) setTimeout(()=>{fill.style.width=fill.dataset.pct+'%';},200);
+      const num=e.target.querySelector('.stat-num');
+      if(num) animateCounter(num);
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// COUNTER
+function animateCounter(el){
+  if(el.dataset.done) return;
+  el.dataset.done=1;
+  const target=+el.dataset.target;
+  const start=performance.now();
+  function upd(now){
+    const p=Math.min((now-start)/1800,1);
+    const ease=1-Math.pow(1-p,4);
+    el.textContent=Math.round(ease*target).toLocaleString('fa-IR');
+    if(p<1) requestAnimationFrame(upd);
+    else el.textContent=target.toLocaleString('fa-IR');
+  }
+  requestAnimationFrame(upd);
+}
+
+// CTA
+function ctaClick(btn){
+  btn.style.transform='scale(.95)';
+  setTimeout(()=>btn.style.transform='',200);
+  const r=document.createElement('div');
+  r.style.cssText='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:9999;font-size:7rem;animation:fadeUp .6s ease both';
+  r.textContent='🚀';
+  document.body.appendChild(r);
+  setTimeout(()=>r.remove(),700);
+}
+
+// BG COLOR CYCLE
+const bgColors=['#ff6b6b22','#ffd93d22','#6bcb7722','#4d96ff22','#c77dff22'];
+let bci=0;
+setInterval(()=>{
+  document.body.style.backgroundImage=`radial-gradient(ellipse at 50% 50%,${bgColors[bci]} 0%,transparent 70%)`;
+  bci=(bci+1)%bgColors.length;
+},3000);
+</script>
+</body>
+</html>

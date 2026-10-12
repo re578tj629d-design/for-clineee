@@ -9,7 +9,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--c1:#ff6b6b;--c2:#ffd93d;--c3:#6bcb77;--c4:#4d96ff;--c5:#c77dff;--c6:#ff9a3c;--dark:#0a0a1a}
 body{background:var(--dark);font-family:'Vazirmatn',sans-serif;overflow-x:hidden;color:white}
-#stars{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,#0d0d2b 0%,#000005 100%)}
+#stars{position:fixed;inset:0;z-index:1;pointer-events:none}
 .star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d) infinite ease-in-out}
 @keyframes twinkle{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
 section{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;overflow:hidden}
@@ -310,13 +310,162 @@ function ctaClick(btn){
   setTimeout(()=>r.remove(),700);
 }
 
-// BG COLOR CYCLE
-const bgColors=['#ff6b6b22','#ffd93d22','#6bcb7722','#4d96ff22','#c77dff22'];
-let bci=0;
-setInterval(()=>{
-  document.body.style.backgroundImage=`radial-gradient(ellipse at 50% 50%,${bgColors[bci]} 0%,transparent 70%)`;
-  bci=(bci+1)%bgColors.length;
-},3000);
+// BG / MOUSE / GEOMETRY EFFECTS (appended below)
+/* ═══ 1. MOUSE Y → BACKGROUND COLOR ═══ */
+const bgCanvas=document.createElement('canvas');
+bgCanvas.style.cssText='position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%';
+document.body.insertBefore(bgCanvas,document.body.firstChild);
+const bctx=bgCanvas.getContext('2d');
+function resizeBg(){bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;}
+resizeBg(); window.addEventListener('resize',resizeBg);
+
+let mx=window.innerWidth/2,my=window.innerHeight/2;
+let targetHue=220,curHue=220,scrollProg=0;
+
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  targetHue=(e.clientY/window.innerHeight)*280;
+});
+window.addEventListener('scroll',()=>{
+  const max=document.body.scrollHeight-window.innerHeight||1;
+  scrollProg=Math.min(window.scrollY/max,1);
+});
+
+(function bgLoop(){
+  requestAnimationFrame(bgLoop);
+  curHue+=(targetHue-curHue)*0.05;
+  const hue2=(curHue+120)%360;
+  const bright=14+scrollProg*24;
+  bctx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
+  const base=bctx.createRadialGradient(
+    bgCanvas.width/2,bgCanvas.height/2,0,
+    bgCanvas.width/2,bgCanvas.height/2,bgCanvas.width*.8);
+  base.addColorStop(0,`hsl(${curHue},45%,${bright/2}%)`);
+  base.addColorStop(1,'hsl(230,60%,3%)');
+  bctx.fillStyle=base; bctx.fillRect(0,0,bgCanvas.width,bgCanvas.height);
+  const glow=bctx.createRadialGradient(mx,my,0,mx,my,320);
+  glow.addColorStop(0,`hsla(${curHue},100%,${bright}%,0.20)`);
+  glow.addColorStop(.5,`hsla(${hue2},90%,${bright}%,0.07)`);
+  glow.addColorStop(1,'transparent');
+  bctx.fillStyle=glow; bctx.fillRect(0,0,bgCanvas.width,bgCanvas.height);
+  const wave=bctx.createLinearGradient(0,bgCanvas.height*.6,0,bgCanvas.height);
+  wave.addColorStop(0,'transparent');
+  wave.addColorStop(1,`hsla(${hue2},80%,12%,${scrollProg*.45})`);
+  bctx.fillStyle=wave; bctx.fillRect(0,0,bgCanvas.width,bgCanvas.height);
+})();
+/* ═══ 2. GEOMETRIC SHAPES ORBITING TEXT ON HOVER ═══ */
+const geoCanvas=document.createElement('canvas');
+geoCanvas.style.cssText='position:fixed;inset:0;z-index:2;pointer-events:none;width:100%;height:100%';
+document.body.appendChild(geoCanvas);
+const gctx=geoCanvas.getContext('2d');
+function resizeGeo(){geoCanvas.width=window.innerWidth;geoCanvas.height=window.innerHeight;}
+resizeGeo(); window.addEventListener('resize',resizeGeo);
+
+const shapeColors=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff','#ff9a3c','#ffffff'];
+const shapeTypes=['circle','triangle','square','diamond','cross','hexagon'];
+const orbitSelectors=['.sec-title','.hero-title','.stat-card','.skill-card','.step-body h3','.typewriter-wrap','.cta-title','.hero-tag'];
+let orbits=[];
+
+function rectOf(el){const r=el.getBoundingClientRect();return{cx:r.left+r.width/2,cy:r.top+r.height/2,w:r.width,h:r.height};}
+
+function makeOrbit(el){
+  const {cx,cy,w,h}=rectOf(el);
+  const count=6+Math.floor(Math.random()*5);
+  const baseR=Math.max(w,h)/2+22;
+  const shapes=[];
+  for(let i=0;i<count;i++){
+    shapes.push({
+      type:shapeTypes[i%shapeTypes.length],
+      angle:(i/count)*Math.PI*2,
+      speed:(Math.random()>.5?1:-1)*(0.008+Math.random()*0.02),
+      radius:baseR+Math.random()*38,
+      size:5+Math.random()*9,
+      color:shapeColors[i%shapeColors.length],
+      alpha:0,target:0.9,
+      wave:Math.random()*Math.PI*2,
+      wsp:0.03+Math.random()*0.04
+    });
+  }
+  return {el,cx,cy,shapes,fadeOut:false};
+}
+
+document.querySelectorAll(orbitSelectors.join(',')).forEach(el=>{
+  el.addEventListener('mouseenter',()=>{orbits.push(makeOrbit(el));});
+  el.addEventListener('mouseleave',()=>{orbits.forEach(o=>{if(o.el===el)o.fadeOut=true;});});
+  el.addEventListener('mousemove',()=>{
+    const {cx,cy}=rectOf(el);
+    orbits.forEach(o=>{if(o.el===el){o.cx=cx;o.cy=cy;}});
+  });
+});
+
+function drawShape(type,x,y,size,color,alpha){
+  gctx.save();
+  gctx.globalAlpha=alpha;
+  gctx.strokeStyle=color; gctx.fillStyle=color+'33'; gctx.lineWidth=1.5;
+  gctx.shadowColor=color; gctx.shadowBlur=12;
+  gctx.beginPath();
+  if(type==='circle'){gctx.arc(x,y,size,0,Math.PI*2);gctx.stroke();gctx.fill();}
+  else if(type==='triangle'){gctx.moveTo(x,y-size);gctx.lineTo(x+size*.87,y+size*.5);gctx.lineTo(x-size*.87,y+size*.5);gctx.closePath();gctx.stroke();gctx.fill();}
+  else if(type==='square'){gctx.translate(x,y);gctx.rotate(Math.PI/4);gctx.strokeRect(-size/2,-size/2,size,size);gctx.fillRect(-size/2,-size/2,size,size);}
+  else if(type==='diamond'){gctx.moveTo(x,y-size);gctx.lineTo(x+size*.6,y);gctx.lineTo(x,y+size);gctx.lineTo(x-size*.6,y);gctx.closePath();gctx.stroke();gctx.fill();}
+  else if(type==='cross'){gctx.moveTo(x-size,y);gctx.lineTo(x+size,y);gctx.moveTo(x,y-size);gctx.lineTo(x,y+size);gctx.stroke();}
+  else {for(let i=0;i<6;i++){const a=i*Math.PI/3,nx=x+size*Math.cos(a),ny=y+size*Math.sin(a);i===0?gctx.moveTo(nx,ny):gctx.lineTo(nx,ny);}gctx.closePath();gctx.stroke();gctx.fill();}
+  gctx.restore();
+}
+
+(function geoLoop(){
+  requestAnimationFrame(geoLoop);
+  gctx.clearRect(0,0,geoCanvas.width,geoCanvas.height);
+  orbits=orbits.filter(o=>{
+    o.shapes.forEach(s=>{
+      s.angle+=s.speed; s.wave+=s.wsp;
+      s.alpha=o.fadeOut?Math.max(0,s.alpha-0.03):Math.min(s.target,s.alpha+0.05);
+      const nx=o.cx+Math.cos(s.angle)*(s.radius+Math.sin(s.wave)*8);
+      const ny=o.cy+Math.sin(s.angle)*(s.radius+Math.sin(s.wave)*8);
+      // connector line
+      gctx.save(); gctx.globalAlpha=s.alpha*0.22; gctx.strokeStyle=s.color;
+      gctx.lineWidth=.8; gctx.setLineDash([4,8]);
+      gctx.beginPath(); gctx.moveTo(o.cx,o.cy); gctx.lineTo(nx,ny); gctx.stroke(); gctx.restore();
+      drawShape(s.type,nx,ny,s.size,s.color,s.alpha);
+    });
+    return !o.fadeOut||o.shapes.some(s=>s.alpha>0.01);
+  });
+})();
+/* ═══ 3. MOUSE TRAIL SPARKS ═══ */
+const sparkCanvas=document.createElement('canvas');
+sparkCanvas.style.cssText='position:fixed;inset:0;z-index:3;pointer-events:none;width:100%;height:100%';
+document.body.appendChild(sparkCanvas);
+const sctx=sparkCanvas.getContext('2d');
+function resizeSpk(){sparkCanvas.width=window.innerWidth;sparkCanvas.height=window.innerHeight;}
+resizeSpk(); window.addEventListener('resize',resizeSpk);
+
+const sparks=[];
+document.addEventListener('mousemove',e=>{
+  if(Math.random()>0.45) return;
+  sparks.push({
+    x:e.clientX,y:e.clientY,
+    vx:(Math.random()-.5)*3, vy:(Math.random()-.5)*3-1,
+    life:1, color:shapeColors[Math.floor(Math.random()*shapeColors.length)],
+    size:2+Math.random()*4
+  });
+  if(sparks.length>90) sparks.shift();
+});
+
+(function sparkLoop(){
+  requestAnimationFrame(sparkLoop);
+  sctx.clearRect(0,0,sparkCanvas.width,sparkCanvas.height);
+  for(let i=sparks.length-1;i>=0;i--){
+    const s=sparks[i];
+    s.x+=s.vx; s.y+=s.vy; s.vy+=0.08; s.life-=0.03;
+    if(s.life<=0){sparks.splice(i,1);continue;}
+    sctx.save();
+    sctx.globalAlpha=s.life;
+    sctx.shadowColor=s.color; sctx.shadowBlur=8; sctx.fillStyle=s.color;
+    sctx.beginPath(); sctx.arc(s.x,s.y,s.size*s.life,0,Math.PI*2); sctx.fill();
+    sctx.restore();
+  }
+})();
+
 </script>
 </body>
 </html>
